@@ -6,4 +6,4 @@
 # 'deactivate' to exit
 
 
-source nanogpt-env/bin/activat
+source nanogpt-env/bin/activate
