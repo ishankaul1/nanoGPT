@@ -23,7 +23,8 @@ This creates a `nanogpt-trainer:latest` image with PyTorch 2.8.0 and all depende
 ### 2. Test Locally (CPU)
 
 ```bash
-./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 --mount-output ./test_outputs
+./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --mount-output ./test_outputs
+
 ```
 
 This runs a short training session on CPU to verify everything works. Outputs will be saved to `./test_outputs/` on your local machine.
