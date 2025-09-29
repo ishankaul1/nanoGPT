@@ -16,8 +16,6 @@ This repository contains a Dockerized setup for training nanoGPT models that can
 ./build_and_run.sh build
 ```
 
-NOTE TO SELF: Docker auth outage rn. Should follow up on their status/incident report and try building again when it's fixed. Pytorch 2.1 worked on build, but training failed bc of a version mismatch. Training directly on my local worked with 2.8, so need to rebuild with the new dockerfile.
-
 This creates a `nanogpt-trainer:latest` image with PyTorch 2.8.0 and all dependencies.
 
 ### 2. Test Locally (CPU)
