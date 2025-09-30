@@ -20,8 +20,13 @@ This creates a `nanogpt-trainer:latest` image with PyTorch 2.8.0 and all depende
 
 ### 2. Test Locally (CPU)
 
+Run with a VERY small model, low eval_iters and max_iters.
+CPU is painstakingly slow.
+
 ```bash
-./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --mount-output ./test_outputs
+./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 \
+      --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --eval_iters=5 \
+      --mount-output ./test_outputs
 
 ```
 

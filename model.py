@@ -168,12 +168,16 @@ class GPT(nn.Module):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
     def forward(self, idx, targets=None):
-        device = idx.device
-        b, t = idx.size()
-        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
-        pos = torch.arange(0, t, dtype=torch.long, device=device) # shape (t)
-
         # forward the GPT model itself
+
+        device = idx.device
+        b, t = idx.size() # Batch size, sequence length
+        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
+        pos = torch.arange(0, t, dtype=torch.long, device=device) # shape (t) for position embeddings; literally just [0,1,2,...,t-1]
+
+        # wte is embedding table for token embeddings. calling wte(idx) just does a lookup on every token in batch * seq against the table, so we get
+        # back a (b, t, n_embd) tensor
+        # wpe is embedding table for position embeddings
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
         x = self.transformer.drop(tok_emb + pos_emb)

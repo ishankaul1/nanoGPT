@@ -26,24 +26,23 @@ import math
 import pickle
 from contextlib import nullcontext
 
-print("DEBUG: Basic imports done", flush=True)
 
 import numpy as np
 
-print("DEBUG: NumPy imported", flush=True)
 
 import torch
 
-print("DEBUG: PyTorch imported", flush=True)
 
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 
-print("DEBUG: PyTorch DDP imports done", flush=True)
 
 from model import GPTConfig, GPT
 
-print("DEBUG: Model imports done", flush=True)
+
+# TODO better logging; probably want a debug mode & not straight to stdout
+
+print("DEBUG: All imports done", flush=True)
 
 # -----------------------------------------------------------------------------
 # default config values designed to train a gpt2 (124M) on OpenWebText
@@ -301,6 +300,10 @@ def estimate_loss():
     for split in ["train", "val"]:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
+            print(
+                f"DEBUG: estimate_loss starting for split {split}, k={k}/{eval_iters}",
+                flush=True,
+            )
             X, Y = get_batch(split)
             with ctx:
                 logits, loss = model(X, Y)
@@ -341,13 +344,18 @@ local_iter_num = 0  # number of iterations in the lifetime of this process
 raw_model = model.module if ddp else model  # unwrap DDP container if needed
 running_mfu = -1.0
 while True:
-    print("DEBUG: Starting training iteration", flush=True)
+    print("DEBUG: Starting training iteration: ", flush=True)
     # determine and set the learning rate for this iteration
     lr = get_lr(iter_num) if decay_lr else learning_rate
+
+    print(f"DEBUG: Setting learning rate to {lr}", flush=True)
     for param_group in optimizer.param_groups:
         param_group["lr"] = lr
 
-    # evaluate the loss on train/val sets and write checkpoints
+    print(
+        f"DEBUG: Learning rate set, about to check eval interval; running if {iter_num % eval_interval} == 0",
+        flush=True,
+    )
     if iter_num % eval_interval == 0 and master_process:
         losses = estimate_loss()
         print(
@@ -377,9 +385,18 @@ while True:
                 }
                 print(f"saving checkpoint to {out_dir}", flush=True)
                 torch.save(checkpoint, os.path.join(out_dir, "ckpt.pt"))
+
+    print(
+        f"DEBUG: Eval interval done, about to break if eval_only {eval_only}",
+        flush=True,
+    )
     if iter_num == 0 and eval_only:
         break
 
+    print(
+        f"DEBUG: Eval only check done, about to do micro steps; gradient_accumulation_steps: {gradient_accumulation_steps}",
+        flush=True,
+    )
     # forward backward update, with optional gradient accumulation to simulate larger batch size
     # and using the GradScaler if data type is float16
     for micro_step in range(gradient_accumulation_steps):
@@ -426,6 +443,11 @@ while True:
     t1 = time.time()
     dt = t1 - t0
     t0 = t1
+
+    print(
+        f"DEBUG: About to do logging if {iter_num % log_interval} == 0, and master_process: {master_process}",
+        flush=True,
+    )
     if iter_num % log_interval == 0 and master_process:
         # get loss as float. note: this is a CPU-GPU sync point
         # scale up to undo the division above, approximating the true total loss (exact would have been a sum)
