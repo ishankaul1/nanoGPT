@@ -41,15 +41,15 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 
 Some fun directions to try:
 
+- 📈 Add more metrics & evals to logging setup
 - ✨ Add modern architectural changes; retrain and see effect on training inference. Some ideas -
   SwiGLU + RMSNorm
   RoPE
   KV cache (inference)
   GQA (inference)
+  Multimodal (vision+text)
   MoE
-- 📈 Add more metrics to logging  
 - 🧮 Tinker with model size & hyperparameters  
-- 🧠 Incorporate more modern architectural add-ons (from newer papers)  
 - 🪄 Experiment with fine-tuning using **QLoRA / LoRA** setups  
 - 🧭 Retrain or fine-tune using fancy RL methods
 
