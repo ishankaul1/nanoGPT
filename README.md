@@ -30,25 +30,30 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
       --mount-output ./test_outputs
     ```
 - [ ] Docker image successfully runs Shakespeare Char train on GPU  
-- [ ] Checkpointed model, logs, and Weights & Biases (wandb) outputs can be pulled out cleanly  
+- [ ] Dial in on eval setup
+  - [ ] Wandb integration working end-to-end (logs sync from container)  
+  - [ ] Training loss + validation loss curves  
+  - [ ] Gradient norms (helps catch instability early)  
+  - [ ] Learning rate schedule visualization  
+  - [ ] Sample generation at checkpoints (qualitative eval — does it look like Shakespeare?)  
+  - [ ] Perplexity metrics  
+  - [ ] Token/sec throughput (you'll care about this when experimenting)
+  - [ ] All checkpoints must make it out into RunPod (if not already done)
 - [ ] Full retrain on OpenWebText using GPU  
 - [ ] Try distributed / faster runs  
-- [ ] Fine-tune with Shakespeare or another dataset
-
 ---
 
-### 2. 🧠 **Experimentation**
+### 2. 🧠 **Architecture & Experimentation**
 
 Some fun directions to try:
 
-- 📈 Add more metrics & evals to logging setup
 - ✨ Add modern architectural changes; retrain and see effect on training inference. Some ideas -
-  SwiGLU + RMSNorm
-  RoPE
-  KV cache (inference)
-  GQA (inference)
-  Multimodal (vision+text)
-  MoE
+  - SwiGLU + RMSNorm
+  - RoPE
+  - KV cache (inference)
+  - GQA (inference)
+  - Multimodal (vision+text)
+  - MoE
 - 🧮 Tinker with model size & hyperparameters  
 - 🪄 Experiment with fine-tuning using **QLoRA / LoRA** setups  
 - 🧭 Retrain or fine-tune using fancy RL methods
@@ -58,8 +63,10 @@ Some fun directions to try:
 ### 3. 🧬 **Advanced Stuff**  
 > Might move out of this repo eventually.
 
-- 🧠 Add **multimodality**  
 - 🧪 Fine-tune or modify **open-source models**
+- 🧠 More **multimodality** 
+- Try Muons?
+
 
 ---
 
