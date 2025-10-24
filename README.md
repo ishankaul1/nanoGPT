@@ -24,6 +24,7 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 - [ ] Docker image successfully runs Shakespeare Char train on GPU  
   <- YOU ARE HERE. Time for first test run on RunPod ;)
 - [ ] Dial in on eval setup
+  - [ ] Multi-Checkpoint (not just a single checkpoint)
   - [ ] Wandb integration working end-to-end (logs sync from container)  
   - [ ] Training loss + validation loss curves  
   - [ ] Gradient norms (helps catch instability early)  
@@ -31,7 +32,6 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
   - [ ] Sample generation at checkpoints (qualitative eval — does it look like Shakespeare?)  
   - [ ] Perplexity metrics  
   - [ ] Token/sec throughput (you'll care about this when experimenting)
-  - [ ] All checkpoints must make it out into RunPod (if not already done)
 - [ ] Full retrain on OpenWebText using GPU  
 - [ ] Try distributed / faster runs  
 ---
