@@ -20,16 +20,9 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 
 - [x] Single entrypoint scripts to prep data & train locally on Mac  
 - [x] Helper scripts for deploying onto GPU provider (Runpod)  
-- [ ] Flexible single-entrypoint Dockerfile deployable to RunPod  
-  - _**You are here**_ 🧭  
-  - Almost there. LAST piece is figuring out why my checkpoint file didn't make it into my mounted output. 
-  - Test cmd:  
-    ```bash
-    ./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 \
-      --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --eval_iters=5 \
-      --mount-output ./test_outputs
-    ```
+- [x] Flexible single-entrypoint Dockerfile deployable to RunPod  
 - [ ] Docker image successfully runs Shakespeare Char train on GPU  
+  <- YOU ARE HERE. Time for first test run on RunPod ;)
 - [ ] Dial in on eval setup
   - [ ] Wandb integration working end-to-end (logs sync from container)  
   - [ ] Training loss + validation loss curves  

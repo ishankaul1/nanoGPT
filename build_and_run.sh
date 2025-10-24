@@ -75,8 +75,12 @@ run_container() {
     
     # Add output mount if provided
     if [[ -n "$mount_output" ]]; then
+        echo "Mounting output directory: $mount_output"
         mkdir -p "$mount_output"
-        docker_cmd+=("-v" "${mount_output}:/workspace/outputs")
+        # Convert to absolute path
+        local abs_mount_output="$(cd "$(dirname "$mount_output")" && pwd)/$(basename "$mount_output")"
+        echo "Absolute path: ${abs_mount_output}"
+        docker_cmd+=("-v" "${abs_mount_output}:/workspace/outputs")
     fi
     
     # Add image and any extra args
@@ -85,6 +89,9 @@ run_container() {
     # Add dataset/config args and any extra args
     docker_cmd+=("--dataset" "${dataset}" "--config" "${config}" "--out_dir=/workspace/outputs")
     docker_cmd+=("${extra_args[@]}")
+
+    echo "DEBUG: extra_args = ${extra_args[@]}"
+    echo "DEBUG: docker_cmd before image = ${docker_cmd[@]}"
     
     echo "Running container with command:"
     echo "${docker_cmd[*]}"

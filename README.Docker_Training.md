@@ -26,11 +26,17 @@ CPU is painstakingly slow.
 ```bash
 ./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 \
       --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --eval_iters=5 \
+      --always_save_checkpoint=True \
+      --eval_interval=100 \
       --mount-output ./test_outputs
-
 ```
 
 This runs a short training session on CPU to verify everything works. Outputs will be saved to `./test_outputs/` on your local machine.
+
+#### Notes
+- Checkpoints save at `eval_interval`, so make sure `max_iters` is divisible by `eval_interval` or set `eval_interval` appropriately
+- Use `--always_save_checkpoint=True` for testing to force checkpoint saves
+- Output directory is automatically mounted to `/workspace/outputs` in the container
 
 ### 3. Push to Registry
 

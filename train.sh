@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script that wraps dataset preparation and training.
-# Gives you a single entrypoint to do both. Useful for Dockerfiles/cloud pods.
-
 usage() {
   echo "Usage: $(basename "$0") --dataset <name> --config <path> [extra train.py args...]"
   echo "Example:"
@@ -12,15 +9,15 @@ usage() {
 
 DATASET=""
 CONFIG=""
+EXTRA_ARGS=()
 
-# Parse the first two required flags
+# Parse all arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --dataset|-d) DATASET="$2"; shift 2 ;;
     --config|-c) CONFIG="$2"; shift 2 ;;
     --help|-h) usage; exit 0 ;;
-    --) shift; break ;;   # stop parsing, everything after goes to train.py
-    *) break ;;           # bail out, rest goes to train.py
+    *) EXTRA_ARGS+=("$1"); shift ;;  # collect everything else
   esac
 done
 
@@ -31,7 +28,6 @@ if [[ -z "$DATASET" || -z "$CONFIG" ]]; then
   exit 1
 fi
 
-
 # Run prepare if it exists
 if [[ -f "data/${DATASET}/prepare.py" ]]; then
   echo "[train.sh] Preparing dataset: $DATASET"
@@ -39,5 +35,7 @@ if [[ -f "data/${DATASET}/prepare.py" ]]; then
 fi
 
 # Forward everything else to train.py
-echo "[train.sh] Starting training with config=$CONFIG dataset=$DATASET"
-python train.py "$CONFIG" "$@"
+echo "DEBUG: About to run python train.py with args:"
+echo "python train.py $CONFIG ${EXTRA_ARGS[@]}"
+
+python train.py "$CONFIG" "${EXTRA_ARGS[@]}"
