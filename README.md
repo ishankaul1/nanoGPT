@@ -22,9 +22,10 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 - [x] Helper scripts for deploying onto GPU provider (Runpod)  
 - [x] Flexible single-entrypoint Dockerfile deployable to RunPod  
 - [ ] Docker image successfully runs Shakespeare Char train on GPU  
-  <- YOU ARE HERE. Time for first test run on RunPod ;)
+  <- YOU ARE HERE. Time for first test run on RunPod with the same script that worked locally ;)
 - [ ] Dial in on eval setup
   - [ ] Multi-Checkpoint (not just a single checkpoint)
+  - [ ] Better debug mode logs/printi
   - [ ] Wandb integration working end-to-end (logs sync from container)  
   - [ ] Training loss + validation loss curves  
   - [ ] Gradient norms (helps catch instability early)  
