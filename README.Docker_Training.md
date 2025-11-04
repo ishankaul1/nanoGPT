@@ -31,6 +31,11 @@ CPU is painstakingly slow.
       --mount-output ./test_outputs
 ```
 
+NOTE: Build for AMD as well if you're going to deploy to RunPod:
+
+docker buildx build --platform linux/amd64 -t dockerish999/nanogpt-trainer:latest --push .
+
+
 This runs a short training session on CPU to verify everything works. Outputs will be saved to `./test_outputs/` on your local machine.
 
 #### Notes
