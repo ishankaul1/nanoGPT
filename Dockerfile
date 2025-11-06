@@ -41,8 +41,5 @@ ENV WANDB_MODE="disabled"
 # Create workspace directory for persistent data only
 RUN mkdir -p /workspace/outputs
 
-# Set the entrypoint to use train.sh directly
-ENTRYPOINT ["./train.sh"]
-
 # Default arguments (can be overridden)
-CMD ["--dataset", "shakespeare_char", "--config", "config/train_shakespeare_char.py", "--out_dir", "/workspace/outputs"]
+CMD ["./train.sh", "--dataset", "shakespeare_char", "--config", "config/train_shakespeare_char.py", "--out_dir", "/workspace/outputs"]

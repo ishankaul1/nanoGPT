@@ -17,6 +17,7 @@ cmd=(
   --imageName "$IMAGE"
   --containerDiskSize "$DISK_GB"
   --volumeSize "$VOL_GB"
+  --secureCloud
 )
 
 # Append the start command
