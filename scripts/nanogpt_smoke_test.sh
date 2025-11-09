@@ -6,8 +6,7 @@ export NAME="nanogpt-smoke-test"
 export GPU_TYPE="NVIDIA RTX A4000"
 export TEMPLATE_ID="spe4baz8o9"
 export IMAGE="dockerish999/nanogpt-trainer:latest"
-export START="./build_and_run.sh run --device=gpu --max_iters=100 --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --eval_iters=5 --always_save_checkpoint=True --eval_interval=100 --mount-output ./workspace"
-
+export START="./train.sh --dataset shakespeare_char --config config/train_shakespeare_char.py --out_dir=/workspace/outputs --device=cuda --max_iters=100 --n_layer=2 --n_head=4 --n_embd=128 --batch_size=2 --eval_iters=5 --always_save_checkpoint=True --eval_interval=100"
 # Create the pod
 cmd=(
   runpodctl create pods

@@ -12,11 +12,24 @@ This repository contains a Dockerized setup for training nanoGPT models that can
 
 ### 1. Build the Docker Image
 
+#### For Local CPU Testing
 ```bash
-./build_and_run.sh build
+./build_and_run.sh build-local
 ```
 
-This creates a `nanogpt-trainer:latest` image with PyTorch 2.8.0 and all dependencies.
+This creates a `nanogpt-trainer:latest-local` image with CPU-only PyTorch for local testing.
+
+#### For GPU/RunPod Deployment
+```bash
+./build_and_run.sh build-cuda
+```
+
+This builds a `dockerish999/nanogpt-trainer:latest` image with CUDA support for linux/amd64 and automatically pushes it to Docker Hub. The image uses the CUDA-enabled PyTorch from the base image.
+
+**Custom tags/registry:**
+```bash
+TAG=v1.0 REGISTRY=yourusername ./build_and_run.sh build-cuda
+```
 
 ### 2. Test Locally (CPU)
 
@@ -31,76 +44,14 @@ CPU is painstakingly slow.
       --mount-output ./test_outputs
 ```
 
-NOTE: Build for AMD as well if you're going to deploy to RunPod:
-
-docker buildx build --platform linux/amd64 -t dockerish999/nanogpt-trainer:latest --push .
-
-
 This runs a short training session on CPU to verify everything works. Outputs will be saved to `./test_outputs/` on your local machine.
 
 #### Notes
+- The script automatically uses the `latest-local` tag for local runs
 - Checkpoints save at `eval_interval`, so make sure `max_iters` is divisible by `eval_interval` or set `eval_interval` appropriately
 - Use `--always_save_checkpoint=True` for testing to force checkpoint saves
 - Output directory is automatically mounted to `/workspace/outputs` in the container
 
-### 3. Push to Registry
+### 3. Deploy to RunPod
 
-First, tag the image with your Docker Hub username:
-
-```bash
-docker tag nanogpt-trainer:latest yourusername/nanogpt-trainer:latest
-```
-
-Then push to Docker Hub:
-
-```bash
-docker push yourusername/nanogpt-trainer:latest
-```
-
-### 4. Deploy on RunPod
-
-Use your pushed image (`yourusername/nanogpt-trainer:latest`) when creating a RunPod instance.
-
-## Build Script Usage
-
-The `build_and_run.sh` script supports three main commands:
-
-### Build Command
-```bash
-./build_and_run.sh build
-```
-
-### Run Command
-```bash
-./build_and_run.sh run [options...]
-```
-
-**Run Options:**
-- `--dataset <name>` - Dataset to use (default: shakespeare_char)
-- `--config <path>` - Config file path (default: config/train_shakespeare_char.py)
-- `--wandb-key <key>` - W&B API key for logging
-- `--gpu <id>` - GPU device ID (default: 0)
-- `--no-gpu` - Run without GPU support (for local testing)
-- `--mount-output <path>` - Mount local directory for outputs
-
-### Push Command
-```bash
-./build_and_run.sh push
-```
-
-## Training Examples
-
-### Local CPU Testing
-```bash
-./build_and_run.sh run --no-gpu --device=cpu --max_iters=100 --mount-output ./test_outputs
-```
-
-### Local GPU Testing (if you have CUDA)
-```bash
-./build_and_run.sh run --device=cuda --max_iters=500 --mount-output ./outputs
-```
-
-### Production Training (for RunPod)
-```bash
-./build_and_run.sh run --dataset shakespeare_char --config config/train_shakespeare_char.py --wandb-key YOUR_KEY --max_iters=5000
-```
+After building with `build-cuda`, your image is automatically pushed and ready to use on RunPod. See the RunPod deployment section for details.

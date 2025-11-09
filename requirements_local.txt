@@ -1,4 +1,4 @@
-# Pinned versions for compatibility
+# Local development - installs CPU torch
 
 torch>=2.8.0,<3.0.0
 numpy>=1.21.0,<2.0.0

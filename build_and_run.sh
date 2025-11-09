@@ -3,16 +3,21 @@
 
 set -euo pipefail
 
-IMAGE_NAME="nanogpt-trainer"
-TAG="latest"
+IMAGE_NAME="${IMAGE_NAME:-nanogpt-trainer}"
+REGISTRY="${REGISTRY:-dockerish999}"
 
 usage() {
-    echo "Usage: $(basename "$0") [build|run|push] [options...]"
+    echo "Usage: $(basename "$0") [build-local|build-cuda|run] [options...]"
     echo ""
     echo "Commands:"
-    echo "  build                    Build the Docker image"
-    echo "  run [options...]         Run the container with training"
-    echo "  push                     Push to registry (requires docker login)"
+    echo "  build-local              Build for local CPU testing (tag: latest-local)"
+    echo "  build-cuda               Build for CUDA and push to registry (tag: latest)"
+    echo "  run [options...]         Run the container locally with training"
+    echo ""
+    echo "Environment variables:"
+    echo "  IMAGE_NAME               Image name (default: nanogpt-trainer)"
+    echo "  TAG                      Override default tag"
+    echo "  REGISTRY                 Registry prefix (default: dockerish999)"
     echo ""
     echo "Run options:"
     echo "  --dataset <name>         Dataset to use (default: shakespeare_char)"
@@ -23,19 +28,43 @@ usage() {
     echo "  --mount-output <path>    Mount local directory for outputs"
     echo ""
     echo "Examples:"
-    echo "  $(basename "$0") build"
+    echo "  $(basename "$0") build-local"
+    echo "  $(basename "$0") build-cuda"
+    echo "  TAG=v1.0 $(basename "$0") build-cuda"
     echo "  $(basename "$0") run --dataset shakespeare_char --wandb-key YOUR_KEY"
     echo "  $(basename "$0") run --no-gpu --device=cpu --max_iters=100 --mount-output ./test_outputs"
-    echo "  $(basename "$0") run --dataset openwebtext --config config/train_gpt2.py --mount-output ./outputs"
 }
 
-build_image() {
-    echo "Building Docker image: ${IMAGE_NAME}:${TAG}"
-    docker build -t "${IMAGE_NAME}:${TAG}" .
+build_local() {
+    local tag="${TAG:-latest-local}"
+    local full_image="${IMAGE_NAME}:${tag}"
+    
+    echo "Building local Docker image: ${full_image}"
+    echo "Using requirements_local.txt for CPU-only torch"
+    docker build \
+        --build-arg REQUIREMENTS_FILE=requirements_local.txt \
+        -t "${full_image}" \
+        .
     echo "Build complete!"
 }
 
+build_cuda() {
+    local tag="${TAG:-latest}"
+    local full_image="${REGISTRY}/${IMAGE_NAME}:${tag}"
+    
+    echo "Building CUDA Docker image: ${full_image}"
+    echo "Using requirements_cuda.txt (torch from base image)"
+    docker buildx build \
+        --platform linux/amd64 \
+        --build-arg REQUIREMENTS_FILE=requirements_cuda.txt \
+        -t "${full_image}" \
+        --push \
+        .
+    echo "Build and push complete!"
+}
+
 run_container() {
+    local tag="${TAG:-latest-local}"
     local dataset="shakespeare_char"
     local config="config/train_shakespeare_char.py" 
     local wandb_key=""
@@ -84,14 +113,13 @@ run_container() {
     fi
     
     # Add image and any extra args
-    docker_cmd+=("${IMAGE_NAME}:${TAG}")
+    docker_cmd+=("${IMAGE_NAME}:${tag}")
     
     # Add dataset/config args and any extra args
     docker_cmd+=("--dataset" "${dataset}" "--config" "${config}" "--out_dir=/workspace/outputs")
-    docker_cmd+=("${extra_args[@]}")
-
-    echo "DEBUG: extra_args = ${extra_args[@]}"
-    echo "DEBUG: docker_cmd before image = ${docker_cmd[@]}"
+    if [[ ${#extra_args[@]} -gt 0 ]]; then
+        docker_cmd+=("${extra_args[@]}")
+    fi
     
     echo "Running container with command:"
     echo "${docker_cmd[*]}"
@@ -100,22 +128,17 @@ run_container() {
     exec "${docker_cmd[@]}"
 }
 
-push_image() {
-    echo "Pushing ${IMAGE_NAME}:${TAG} to registry..."
-    docker push "${IMAGE_NAME}:${TAG}"
-}
-
 # Main command handling
 case "${1:-}" in
-    build)
-        build_image
+    build-local)
+        build_local
+        ;;
+    build-cuda)
+        build_cuda
         ;;
     run)
         shift
         run_container "$@"
-        ;;
-    push)
-        push_image
         ;;
     --help|-h)
         usage

@@ -1,6 +1,9 @@
 # Use PyTorch CUDA base image
 FROM pytorch/pytorch:2.8.0-cuda12.8-cudnn9-devel
 
+# Build arg to choose requirements file
+ARG REQUIREMENTS_FILE=requirements_cuda.txt
+
 # Set working directory for application code (not in /workspace)
 WORKDIR /app/nanogpt
 
@@ -14,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY ${REQUIREMENTS_FILE} requirements.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
