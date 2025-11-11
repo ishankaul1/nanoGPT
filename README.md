@@ -22,7 +22,9 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 - [x] Helper scripts for deploying onto GPU provider (Runpod)  
 - [x] Flexible single-entrypoint Dockerfile deployable to RunPod  
 - [x] Docker image successfully runs Shakespeare Char train on GPU  (YAYYY)
-- [ ] Able to pull out the checkpoint/log files; sync them to some form of cloud storage
+- [ ] Able to pull out the checkpoint/log files
+    - Setup gcs bucket st mount can just sync there
+    - Redeploy with the /runpod mount/output dir (or wait for them to fix mount bug)
 
 - [ ] Dial in on eval setup
   - [ ] Multi-Checkpoint (not just a single checkpoint)
