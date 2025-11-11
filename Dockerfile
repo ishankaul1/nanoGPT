@@ -42,7 +42,7 @@ ENV DEVICE="cuda"
 ENV WANDB_MODE="disabled"
 
 # Create workspace directory for persistent data only
-RUN mkdir -p /workspace/outputs
+RUN mkdir -p /runpod/outputs
 
 # Default arguments (can be overridden)
 CMD ["./train.sh", "--dataset", "shakespeare_char", "--config", "config/train_shakespeare_char.py", "--out_dir", "/workspace/outputs"]
