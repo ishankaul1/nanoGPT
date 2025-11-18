@@ -50,13 +50,14 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 Some fun directions to try:
 
 - ✨ Add modern architectural changes; retrain and see effect on training inference. Some ideas -
+  - Add start token to tokenizer
   - SwiGLU + RMSNorm
   - RoPE
   - KV cache (inference)
   - GQA (inference)
   - Multimodal (vision+text)
   - MoE
-- 🧮 Tinker with model size & hyperparameters  
+- 🧮 Tinker with model size & hyperparameters; learn from some more modern architectures
 - 🪄 Experiment with fine-tuning using **QLoRA / LoRA** setups  
 - 🧭 Retrain or fine-tune using fancy RL methods
 
