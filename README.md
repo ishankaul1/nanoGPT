@@ -36,6 +36,11 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
   - [ ] Sample generation at checkpoints (qualitative eval — does it look like Shakespeare?)  
   - [ ] Perplexity metrics  
   - [ ] Token/sec throughput (you'll care about this when experimenting)
+  - [ ] Attention pattern diagnostics
+    - [ ] Per-layer attention entropy (detect collapse/diffusion)
+    - [ ] Position-0 attention weight (escape hatch usage)
+    - [ ] Attention heatmaps for sample sequences (save as wandb artifacts)
+    - [ ] Optional: induction head detection (for later experiments)
 - [ ] Full retrain on OpenWebText using GPU  
 - [ ] Try distributed / faster runs  
 ---
