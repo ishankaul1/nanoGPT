@@ -49,6 +49,7 @@ Goal: Scripts, Dockerfiles, and infra to make it **easy to train / fine-tune + e
 
 Some fun directions to try:
 
+- Multi-stage training to elicit ideal behavior (pretrain -> sft; maybe rl?) with public datasets
 - ✨ Add modern architectural changes; retrain and see effect on training inference. Some ideas -
   - Add start token to tokenizer
   - SwiGLU + RMSNorm
@@ -59,7 +60,7 @@ Some fun directions to try:
   - MoE
 - 🧮 Tinker with model size & hyperparameters; learn from some more modern architectures
 - 🪄 Experiment with fine-tuning using **QLoRA / LoRA** setups  
-- 🧭 Retrain or fine-tune using fancy RL methods
+- Try modern RL methods
 
 ---
 
