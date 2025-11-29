@@ -3,7 +3,8 @@
 
 set -euo pipefail
 
-IMAGE_NAME="${IMAGE_NAME:-nanogpt-trainer}"
+# NOTE: Dockerfile now carries service accounts; DO NOT push to public registries anymore!
+IMAGE_NAME="${IMAGE_NAME:-nanogpt-trainer-private}"
 REGISTRY="${REGISTRY:-dockerish999}"
 
 usage() {

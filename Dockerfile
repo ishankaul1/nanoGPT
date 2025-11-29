@@ -11,6 +11,9 @@ WORKDIR /app/nanogpt
 RUN apt-get update && apt-get install -y \
     git \
     wget \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
     curl \
     vim \
     htop \
@@ -21,6 +24,16 @@ COPY ${REQUIREMENTS_FILE} requirements.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install gcloud cli for file syncing
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && apt-get update -y \
+    && apt-get install google-cloud-cli -y
+
+# Copy service account credentials and set env var (private docker repository; this is okay)
+COPY gcs-service-account-key.json /app/
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/gcs-service-account-key.json
 
 # Copy the core training files
 COPY train.py .
@@ -40,9 +53,11 @@ ENV DATASET="shakespeare_char"
 ENV CONFIG="config/train_shakespeare_char.py"
 ENV DEVICE="cuda"
 ENV WANDB_MODE="disabled"
+ENV GCS_BUCKET="ai-experiments-479020"
 
 # Create workspace directory for persistent data only
-RUN mkdir -p /runpod/outputs
+# TODO - get rid of this; force output_dir to exist in train.sh instead
+# RUN mkdir -p /runpod/outputs
 
 # Default arguments (can be overridden)
 CMD ["./train.sh", "--dataset", "shakespeare_char", "--config", "config/train_shakespeare_char.py", "--out_dir", "/workspace/outputs"]
