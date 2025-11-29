@@ -11,3 +11,4 @@ input.txt
 env/
 venv/
 nanogpt-env/
+gcs-service-account-key.json
