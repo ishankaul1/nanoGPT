@@ -16,7 +16,7 @@ usage() {
     echo "  run [options...]         Run the container locally with training"
     echo ""
     echo "Environment variables:"
-    echo "  IMAGE_NAME               Image name (default: nanogpt-trainer)"
+    echo "  IMAGE_NAME               Image name (default: nanogpt-trainer-private)"
     echo "  TAG                      Override default tag"
     echo "  REGISTRY                 Registry prefix (default: dockerish999)"
     echo ""

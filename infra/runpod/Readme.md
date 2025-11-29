@@ -13,7 +13,7 @@ runpodctl get cloud
 ```
 NAME=my-smoke \
 GPU_TYPE="NVIDIA RTX 4000 Ada" \
-IMAGE="<yourusername>/nanogpt-trainer:latest" \
+IMAGE="<yourusername>/nanogpt-trainer-private:latest" \
 DISK_GB=5 \
 VOL_GB=0 \
 ./rp_create_pod.sh

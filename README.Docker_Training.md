@@ -17,14 +17,14 @@ This repository contains a Dockerized setup for training nanoGPT models that can
 ./build_and_run.sh build-local
 ```
 
-This creates a `nanogpt-trainer:latest-local` image with CPU-only PyTorch for local testing.
+This creates a `nanogpt-trainer-private:latest-local` image with CPU-only PyTorch for local testing.
 
 #### For GPU/RunPod Deployment
 ```bash
 ./build_and_run.sh build-cuda
 ```
 
-This builds a `dockerish999/nanogpt-trainer:latest` image with CUDA support for linux/amd64 and automatically pushes it to Docker Hub. The image uses the CUDA-enabled PyTorch from the base image.
+This builds a `dockerish999/nanogpt-trainer-private:latest` image with CUDA support for linux/amd64 and automatically pushes it to Docker Hub. The image uses the CUDA-enabled PyTorch from the base image.
 
 **Custom tags/registry:**
 ```bash

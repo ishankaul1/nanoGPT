@@ -2,7 +2,7 @@
 # Create a super simple test with just a basic command
 export NAME="nanogpt-test-2"
 export GPU_TYPE="NVIDIA RTX A4000"
-export IMAGE="dockerish999/nanogpt-trainer:latest"
+export IMAGE="dockerish999/nanogpt-trainer-private:latest"
 export DISK_GB=20
 export VOL_GB=10
 export START="echo 'Container started!' && sleep 300"
